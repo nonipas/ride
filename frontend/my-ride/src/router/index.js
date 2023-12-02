@@ -7,6 +7,7 @@ import TripView from '../views/TripView.vue'
 import StandByView from '../views/StandByView.vue'
 import DriverView from '../views/DriverView.vue'
 import DrivingView from '../views/DrivingView.vue'
+import { api_url } from '../helpers/http'
 import axios from 'axios'
 
 const router = createRouter({
@@ -69,7 +70,7 @@ router.beforeEach((to, from) => {
 })
 
 const checkTokenAuthenticity = () => {
-  axios.get('http://localhost/ride/back/api/user', {
+  axios.get(api_url+'/api/user', {
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     }
