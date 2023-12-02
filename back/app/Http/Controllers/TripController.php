@@ -6,6 +6,7 @@ use App\Events\TripAccepted;
 use App\Events\TripEnded;
 use App\Events\TripLocationUpdated;
 use App\Events\TripStarted;
+use App\Events\TripCreated;
 use App\Models\Trip;
 use Illuminate\Http\Request;
 
@@ -27,7 +28,7 @@ class TripController extends Controller
             'destination_name'
         ));
 
-        
+        TripCreated::dispatch($trip, $request->user());
 
         //return the trip
         return $trip;
@@ -74,7 +75,7 @@ class TripController extends Controller
 
         $trip->load('driver.user');
 
-        TripAccepted::dispatch($trip,$request->user());
+        TripAccepted::dispatch($trip,$trip->user);
 
         return $trip;
     }   
@@ -118,7 +119,7 @@ class TripController extends Controller
 
         $trip->load('driver.user');
 
-        TripLocationUpdated::dispatch($trip,$request->user());
+        TripLocationUpdated::dispatch($trip,$trip->user);
 
         return $trip;
     }
