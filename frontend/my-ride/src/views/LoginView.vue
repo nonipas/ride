@@ -29,6 +29,7 @@ import { ref, reactive } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router';
 import { onMounted } from 'vue'
+import http from '../helpers/http';
 
 const router = useRouter()
 
@@ -54,7 +55,7 @@ const getFormattedCredentials = () => {
 
 const handleLogin = () => {
 
-    axios.post('http://localhost/ride/back/api/login', getFormattedCredentials())
+    axios.post('https://app.jojoelectricals.com/api/login', getFormattedCredentials())
     .then(response => {
         console.log(response.data)
         waitingOnVerification.value = true
@@ -67,7 +68,7 @@ const handleLogin = () => {
 }
 
 const handleVerification = () => {
-    axios.post('http://localhost/ride/back/api/login/verify', getFormattedCredentials())
+    axios.post('https://app.jojoelectricals.com/api/login/verify', getFormattedCredentials())
     .then(response => {
         console.log(response.data) //auth token
         localStorage.setItem('token', response.data)
