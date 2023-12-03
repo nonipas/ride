@@ -23,7 +23,7 @@ export const useTripStore = defineStore('trip', () => {
         }
     })
 
-    const destination_name = ref(null)
+    const destination_name = ref('null')
 
     const driver = reactive({
         id: null,

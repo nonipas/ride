@@ -93,6 +93,7 @@ onMounted(async () => {
         cluster: 'mt1',
         wsHost: api_url,
         wsPort: 6001,
+        wssPort: 6001,
         forceTLS: false,
         disableStats: true,
         enabledTransports: ['ws', 'wss'],
