@@ -20,4 +20,6 @@ import axios from "axios"
 
 export const api_url = 'https://app.jojoelectricals.com'
 
+export const host_url = 'app.jojoelectricals.com'
+
 export default http

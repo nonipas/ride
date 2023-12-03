@@ -31,8 +31,8 @@ import Pusher from 'pusher-js';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useTripStore } from '@/stores/trip';
 import { useLocationStore } from '@/stores/location';
-import http from '../helpers/http';
-import { api_url } from '../helpers/http';
+import http, { host_url } from '../helpers/http';
+import { api_url, host_url } from '../helpers/http';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -91,7 +91,7 @@ onMounted(() => {
         broadcaster: 'pusher',
         key: 'mykey',
         cluster: 'mt1',
-        wsHost: api_url,
+        wsHost: host_url,
         wsPort: 6001,
         wssPort: 6001,
         forceTLS: false,
