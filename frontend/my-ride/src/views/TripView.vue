@@ -32,7 +32,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { useTripStore } from '@/stores/trip';
 import { useLocationStore } from '@/stores/location';
 import http, { host_url } from '../helpers/http';
-import { api_url, host_url } from '../helpers/http';
+import { api_url } from '../helpers/http';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
