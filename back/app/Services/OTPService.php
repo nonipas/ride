@@ -10,21 +10,19 @@ use GuzzleHttp\Client;
 class OTPService
 {
     public function otpRequest($phone){
-
         $client = new Client();
-
         $response = $client->request('POST', 'https://api.sendchamp.com/api/v1/verification/create', [
             'json' => [
                 'channel' => 'sms',
                 'sender' => 'Sendchamp',
                 'token_type' => 'numeric',
                 'token_length' => 6,
-                'expiration_time' => 2,
+                'expiration_time' => 5,
                 'customer_mobile_number' => $phone,
             ],
             'headers' => [
-                'Authorization' => 'Bearer sendchamp_live_$2a$10$nf6/qgbrFC6aanb8ddtUcO1UqR8pPEl.aTwC/PRR8Hbp4/B8kt83a',
-                'accept' => 'application/json',
+                'Authorization' => 'Bearer sendchamp_live_$2a$10$L0hf7vujlPxbbIgvkxGRjuoIpbJDQtebaJqy8AkDhYZkMcaJvHi0O',
+                "Accept: application/json,text/plain,*/*",
                 'content-type' => 'application/json',
             ],
         ]);
