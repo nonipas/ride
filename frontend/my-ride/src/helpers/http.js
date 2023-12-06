@@ -20,7 +20,7 @@ import axios from "axios"
 
 export const api_url = 'https://app.jojoelectricals.com'
 
-export const host_name = 'jojoelectricals.com'
+export const host_name = 'app.jojoelectricals.com'
 
 // export const api_url = 'http://localhost/ride/back'
 
