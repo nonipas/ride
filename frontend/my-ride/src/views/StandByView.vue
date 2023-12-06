@@ -51,7 +51,7 @@ import { useRouter } from 'vue-router';
 import { useTripStore } from '@/stores/trip';
 import { useLocationStore } from '@/stores/location';
 import { ref } from 'vue';
-import { api_url, host_url } from '../helpers/http';
+import { api_url, host_name } from '../helpers/http';
 
 const router = useRouter();
 const title = ref('waiting for ride request...')
@@ -86,12 +86,12 @@ const handleDeclineTrip = () => {
 onMounted(async () => {
 
     await location.updateCurrentLocation();
-
+    
     let echo = new Echo({
         broadcaster: 'pusher',
         key: 'mykey',
         cluster: 'mt1',
-        wsHost: host_url,
+        wsHost: host_name,
         wsPort: 6001,
         wssPort: 6001,
         forceTLS: false,
