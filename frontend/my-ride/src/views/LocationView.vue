@@ -32,6 +32,7 @@ const location = useLocationStore();
 
 const handleLocationChanged = (e) => {
     console.log('handleLocationChanged', e);
+
     location.$patch({
         destination: {
             name: e.name,

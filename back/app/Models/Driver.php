@@ -13,12 +13,12 @@ class Driver extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function trips()
     {
-        return $this->hasMany(Trip::class);
+        return $this->hasMany(Trip::class, 'driver_id');
     }
 
 }

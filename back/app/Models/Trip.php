@@ -17,6 +17,10 @@ class Trip extends Model
         'driver_location' => 'array',
         'is_started' => 'boolean',
         'is_complete' => 'boolean',
+        'amount' => 'decimal:2',
+        'payment_status' => 'string',
+        'payment_method' => 'string',
+        'payment_reference' => 'string',
     ];
 
     public function driver()

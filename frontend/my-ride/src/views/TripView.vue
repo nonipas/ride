@@ -18,6 +18,16 @@
                 </div>
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                     <span>{{ message }}</span>
+                    
+                </div>
+                
+                <div class="flex justify-between px-4 py-3 bg-gray-50 text-right sm:px-6">
+                    <button v-if="paymentButton" @click.prevent="handlePayment" type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:bg-black">
+                        Pay
+                    </button>
+                    <button v-if="verifyPaymentButton" @click.prevent="verifyPayment" type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:bg-black">
+                        Verify Payment
+                    </button>
                 </div>
             </div>
         </form>
@@ -41,7 +51,11 @@ const trip = useTripStore();
 const location = useLocationStore();
 const gMap = ref(null);
 
-const gMapObject = ref(null)
+const gMapObject = ref(null);
+
+const paymentButton = ref(false);
+const verifyPaymentButton = ref(false);
+
 
 const title = ref('waiting on a driver...');
 const message = ref('When a driver accepts the trip, their info will appear here');
@@ -81,11 +95,82 @@ const updateMapBounds = () => {
         gMapObject.value.fitBounds(LatLngBounds);
 };
 
+const handlePayment = () => {
+    http().post(`/api/trip/${trip.id}/pay`, {
+        amount: trip.amount * 100,
+        payment_reference: ''+Math.floor((Math.random() * 1000000000) + 1),
+        payment_method: 'card',
+    }).then((res) => {
+        console.log(res);
+
+        verifyPaymentButton.value = true;
+        paymentButton.value = false;
+        //open authorization url in new tab
+        window.open(res.data.authorization_url);
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
+//verify payment
+const verifyPayment = () => {
+    http().post(`/api/trip/${trip.id}/verify`, {
+        payment_reference: trip.payment_reference,
+    }).then((res) => {
+        console.log(res);
+        if (res.data.payment_status == 'paid') {
+            title.value = "Thank you for riding with us";
+            message.value = `Your payment of ${res.data.amount} was successful`;
+
+            setTimeout(() => {
+                trip.reset();
+                location.reset();
+
+                router.push({
+                    name: 'landing'
+                })
+            }, 5000)
+        }else{
+            title.value = "Payment failed";
+            message.value = `Your payment of ${res.data.amount} was unsuccessful, please try again.`;
+            verifyPaymentButton.value = false;
+            paymentButton.value = true;
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
+//get driver info
+const getDriverInfo = (id) => {
+    http().get(`/api/driver/${id}`)
+    .then((res) => {
+        console.log(res);
+
+        //out response
+        return res.data;
+        
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
+
 onMounted(() => {
 
     gMap.value.$mapPromise.then((mapObject) => {
         gMapObject.value = mapObject;
     })
+
+    //verify payment from url query
+    if (router.currentRoute.value.query.reference) {
+        
+        verifyPayment();
+    }
+
 
     let echo = new Echo({
         broadcaster: 'pusher',
@@ -104,14 +189,17 @@ onMounted(() => {
     echo.channel(`passenger_${trip.user_id}`)
         .listen('TripAccepted', (e) => {
             trip.$patch(e.trip);
+            console.log('TripAccepted',e);
             location.$patch({
                 current: {
                     geometry: e.trip.destination,
                 }
             });
-
+            const driver = getDriverInfo(e.trip.driver_id);
+            console.log('Driver',driver);
             title.value = 'A driver is on the way';
             message.value = `${e.trip.driver.user.name} is coming in a ${e.trip.driver.year} ${e.trip.driver.color} ${e.trip.driver.make} ${e.trip.driver.model} with license plate ${e.trip.driver.license_number}`;
+            // message.value = `Your driver is coming in a ${driver.year} ${driver.color} ${driver.make} ${driver.model} with license plate ${driver.license_number}`;
         
         })
         .listen('TripLocationUpdated', (e) => {
@@ -130,23 +218,35 @@ onMounted(() => {
         .listen('TripEnded', (e) => {
             trip.$patch(e.trip);
 
+            const driver = getDriverInfo(e.trip.driver_id);
+
+            console.log('Driver',driver);
+
             title.value = "You've arrived";
             message.value = `Hope you enjoyed your trip with ${e.trip.driver.user.name}`;
+            // message.value = `Hope you enjoyed your trip with ${driver.user.name}`;
 
-            setTimeout(() => {
-                trip.reset();
-
-                location.reset();
-
-                router.push({
-                    name: 'landing'
-                })
-            }, 10000);
+            paymentButton.value = true;
         })
+        // .listen('TripPaid', (e) => {
+        //     trip.$patch(e.trip);
 
+        //     console.log('TripPaid', e);
+
+        //     title.value = "Thank you for riding with us";
+        //     message.value = `Your payment of ${e.trip.amount} was successful`;
+
+        //     setTimeout(() => {
+        //         trip.reset();
+        //         location.reset();
+
+        //         router.push({
+        //             name: 'landing'
+        //         })
+        //     }, 5000)
+        // })
 
 });
-
 
 
 </script>

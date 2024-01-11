@@ -38,6 +38,10 @@ export const useTripStore = defineStore('trip', () => {
 
     const is_started = ref(false)
     const is_complete = ref(false)
+    const amount = ref(null)
+    const payment_method = ref(null)
+    const payment_status = ref(null)
+    const payment_reference = ref(null)
 
     const reset = () => {
         id.value = null
@@ -63,8 +67,13 @@ export const useTripStore = defineStore('trip', () => {
 
         is_started.value = false
         is_complete.value = false
+
+        amount.value = null
+        payment_method.value = null
+        payment_status.value = null
+        payment_reference.value = null
     }
 
-    return {id, user_id, origin, destination, destination_name, driver_location, is_started, is_complete, reset}
+    return {id, user_id, origin, destination, destination_name, driver, driver_location, is_started, is_complete, amount, payment_method, payment_status, payment_reference, reset}
 
 })

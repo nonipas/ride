@@ -14,6 +14,9 @@
 
                     <div class="mt-2">
                         <p class="text-xl">Going to <strong>{{ location.destination.name }}</strong></p>
+
+                        <p class="text-xl">Amount: <strong>N {{ amount }} </strong></p>
+                    
                     </div>
                     
                 </div>
@@ -51,12 +54,22 @@ const router = useRouter();
 
 const gMap = ref(null);
 
+const amount = ref(0);
+
+
 const handleConfirmTrip = () => {
 
     http().post('/api/trip', {
 
         origin: location.current.geometry,
         destination: location.destination.geometry,
+        //get amount by multiplying the distance in km by 200
+        amount: getAmount(
+            location.current.geometry.lat,
+            location.current.geometry.lng,
+            location.destination.geometry.lat,
+            location.destination.geometry.lng
+        ),
         destination_name: location.destination.name,
 
     }).then((res) => {
@@ -71,6 +84,21 @@ const handleConfirmTrip = () => {
     });
 }
 
+const getAmount = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in kilometers
+
+    const amount = (Math.round(distance * 200 * 100) / 100).toFixed(0);
+
+    return amount;
+}
+
 onMounted(async () => {
 
     if (location.destination.name === '') {
@@ -79,6 +107,13 @@ onMounted(async () => {
 
     //get user current location
     await location.updateCurrentLocation();
+
+    amount.value = getAmount(
+        location.current.geometry.lat,
+        location.current.geometry.lng,
+        location.destination.geometry.lat,
+        location.destination.geometry.lng
+    );
 
     //draw a path on the map
     gMap.value.$mapPromise.then((mapObject) => {
@@ -109,6 +144,8 @@ onMounted(async () => {
         );
 
     });
+
+    
 
 });
 

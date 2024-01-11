@@ -9,6 +9,10 @@
       <button @click="handleFindRide" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Find A Ride
       </button>
+      <!-- logout button -->
+      <button @click="handleLogout" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+        Logout
+      </button>
     </div>
   </div>
 </template>
@@ -42,6 +46,11 @@ const handleStartDriving = () => {
 
       })
 
+}
+
+const handleLogout = () => {
+  localStorage.removeItem('token')
+  router.push({ name: 'landing' })
 }
 
 const handleFindRide = () => {

@@ -3,8 +3,8 @@ import axios from "axios"
  export const http = () => {
 
     let options = {
-        // baseURL: 'http://localhost/ride/back',
-        baseURL: 'https://app.jojoelectricals.com/',
+        baseURL: 'http://localhost/ride/back',
+        // baseURL: 'https://app.jojoelectricals.com/',
         headers: {}
 
     }
@@ -18,12 +18,12 @@ import axios from "axios"
     return axios.create(options)
 }
 
-export const api_url = 'https://app.jojoelectricals.com'
+// export const api_url = 'https://app.jojoelectricals.com'
 
-export const host_name = 'app.jojoelectricals.com'
+// export const host_name = 'app.jojoelectricals.com'
 
-// export const api_url = 'http://localhost/ride/back'
+export const api_url = 'http://localhost/ride/back'
 
-// export const host_name = 'localhost'
+export const host_name = 'localhost'
 
 export default http

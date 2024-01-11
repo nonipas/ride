@@ -20,4 +20,5 @@ app.use(VueGoogleMaps, {
     },
 })
 
+
 app.mount('#app')

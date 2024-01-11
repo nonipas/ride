@@ -22,6 +22,7 @@
 
                     <div class="mt-2">
                         <p class="text-xl">Going to <strong>{{ trip.destination_name }}</strong></p>
+                        <p class="text-xl">Amount <strong>{{ trip.amount }}</strong></p>
                     </div>
 
                 </div>
